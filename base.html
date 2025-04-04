@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aquix Studio | {% block title %}{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f1f5f9;
+            color: #334155;
+        }
+        
+        .dir-ltr {
+            direction: ltr;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="{{ url_for('index') }}" class="flex items-center">
+                        <span class="text-2xl font-bold text-blue-600">AQUIX</span>
+                        <span class="ml-1 text-sm text-blue-400">STUDIO</span>
+                    </a>
+                </div>
+                
+                <!-- Main Navigation -->
+                <nav class="hidden md:flex space-x-8 space-x-reverse">
+                    <a href="{{ url_for('index') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">الرئيسية</a>
+                    <a href="{{ url_for('freelance') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">الفريلانسرز</a>
+                    <a href="{{ url_for('client_projects') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">مشاريعي</a>
+                    <a href="{{ url_for('client_invoices') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">فواتيري</a>
+                    <a href="{{ url_for('legal') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">الشروط</a>
+                </nav>
+                
+                <!-- User Section -->
+                <div class="flex items-center">
+                    {% if 'user' in session %}
+                    <div class="relative ml-3">
+                        <div class="flex items-center">
+                            <button id="user-menu-button" class="flex items-center text-sm text-gray-700 hover:text-blue-600 focus:outline-none">
+                                <span class="ml-2">{{ session.user.username }}</span>
+                                <i class="fas fa-chevron-down text-xs mr-1"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Dropdown Menu -->
+                        <div id="user-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+                            <a href="{{ url_for('client_dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">لوحة التحكم</a>
+                            <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">تسجيل الخروج</a>
+                        </div>
+                    </div>
+                    {% else %}
+                    <a href="{{ url_for('login') }}" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">تسجيل الدخول</a>
+                    <a href="{{ url_for('register') }}" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700">إنشاء حساب</a>
+                    {% endif %}
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-gray-700 hover:text-blue-600 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="{{ url_for('index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50">الرئيسية</a>
+                <a href="{{ url_for('freelance') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50">الفريلانسرز</a>
+                <a href="{{ url_for('client_projects') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50">مشاريعي</a>
+                <a href="{{ url_for('client_invoices') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50">فواتيري</a>
+                <a href="{{ url_for('legal') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50">الشروط</a>
+                
+                {% if 'user' in session %}
+                <div class="pt-4 border-t border-gray-200">
+                    <a href="{{ url_for('client_dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50">لوحة التحكم</a>
+                    <a href="{{ url_for('logout') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50">تسجيل الخروج</a>
+                </div>
+                {% else %}
+                <div class="pt-4 border-t border-gray-200">
+                    <a href="{{ url_for('login') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50">تسجيل الدخول</a>
+                    <a href="{{ url_for('register') }}" class="block px-3 py-2 rounded-md text-base font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50">إنشاء حساب</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} p-4 mb-4 rounded-md border border-{{ category }}-200 bg-{{ category }}-50 text-{{ category }}-800">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Aquix Studio</h3>
+                    <p class="text-gray-600 text-sm">
+                        منصة متكاملة لتطوير مشاريع Minecraft بجودة عالية واحترافية.
+                    </p>
+                    <div class="flex space-x-4 space-x-reverse mt-4">
+                        <a href="#" class="text-gray-500 hover:text-blue-600">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 hover:text-blue-600">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 hover:text-blue-600">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-500 hover:text-blue-600">
+                            <i class="fab fa-discord"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">روابط سريعة</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{{ url_for('index') }}" class="text-gray-600 hover:text-blue-600 text-sm">الرئيسية</a></li>
+                        <li><a href="{{ url_for('freelance') }}" class="text-gray-600 hover:text-blue-600 text-sm">الفريلانسرز</a></li>
+                        <li><a href="{{ url_for('client_projects') }}" class="text-gray-600 hover:text-blue-600 text-sm">مشاريعي</a></li>
+                        <li><a href="{{ url_for('client_invoices') }}" class="text-gray-600 hover:text-blue-600 text-sm">فواتيري</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">المساعدة</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600 text-sm">الأسئلة الشائعة</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600 text-sm">الدعم الفني</a></li>
+                        <li><a href="{{ url_for('legal') }}" class="text-gray-600 hover:text-blue-600 text-sm">الشروط والأحكام</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600 text-sm">سياسة الخصوصية</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">اتصل بنا</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center text-gray-600 text-sm">
+                            <i class="fas fa-envelope mr-2 text-blue-600"></i>
+                            support@aquixstudio.com
+                        </li>
+                        <li class="flex items-center text-gray-600 text-sm">
+                            <i class="fas fa-phone mr-2 text-blue-600"></i>
+                            +966 50 123 4567
+                        </li>
+                        <li class="flex items-start text-gray-600 text-sm">
+                            <i class="fas fa-map-marker-alt mr-2 mt-1 text-blue-600"></i>
+                            الرياض، المملكة العربية السعودية
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-gray-200 text-center text-sm text-gray-500">
+                <p>&copy; 2023 Aquix Studio. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+        
+        // User menu toggle
+        document.getElementById('user-menu-button').addEventListener('click', function() {
+            document.getElementById('user-menu').classList.toggle('hidden');
+        });
+        
+        // Close menus when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userMenu = document.getElementById('user-menu');
+            
+            if (!userMenu.contains(event.target) && !userMenuButton.contains(event.target)) {
+                userMenu.classList.add('hidden');
+            }
+            
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (!mobileMenu.contains(event.target) && !mobileMenuButton.contains(event.target)) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+        
+        // Auto-hide flash messages after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                alert.style.transition = 'opacity 1s';
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 1000);
+            });
+        }, 5000);
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

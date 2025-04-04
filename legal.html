@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aquix Studio | Legal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --deep-blue: #0a1128;
+        --electric-blue: #00a8ff;
+        --neon-cyan: #00f5ff;
+        --dark-accent: #001f54;
+        --highlight: #7b2dff;
+    }
+    
+    body {
+        font-family: 'Oxanium', sans-serif;
+        background-color: var(--deep-blue);
+        color: white;
+        overflow-x: hidden;
+    }
+    
+    h1, h2, h3, .font-rajdhani {
+        font-family: 'Rajdhani', sans-serif;
+        letter-spacing: 0.05em;
+    }
+    
+    .gradient-text {
+        background: linear-gradient(90deg, var(--electric-blue), var(--neon-cyan));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+    
+    .pixel-border {
+        position: relative;
+        border: 2px solid var(--electric-blue);
+        box-shadow: 0 0 15px rgba(0, 168, 255, 0.3);
+    }
+    
+    .pixel-border::before {
+        content: '';
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        border: 1px solid var(--neon-cyan);
+        pointer-events: none;
+        z-index: -1;
+    }
+    
+    .glow-effect {
+        box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+    }
+    
+    .grid-pattern {
+        background-image: 
+            linear-gradient(rgba(0, 168, 255, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 168, 255, 0.1) 1px, transparent 1px);
+        background-size: 30px 30px;
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+        background: var(--dark-accent);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+        background: var(--electric-blue);
+        border-radius: 4px;
+    }
+    
+    .legal-section {
+        background-color: rgba(0, 31, 84, 0.3);
+        border-radius: 8px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .legal-section h2 {
+        border-bottom: 1px solid var(--electric-blue);
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .legal-section h3 {
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .legal-section p, .legal-section ul {
+        margin-bottom: 1rem;
+        color: #d1d5db;
+    }
+    
+    .legal-section ul {
+        list-style-type: disc;
+        padding-left: 1.5rem;
+    }
+    
+    .legal-nav {
+        position: sticky;
+        top: 6rem;
+    }
+    
+    .legal-nav a {
+        display: block;
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.5rem;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+    
+    .legal-nav a:hover {
+        background-color: rgba(0, 168, 255, 0.2);
+        color: var(--neon-cyan);
+    }
+    
+    .legal-nav a.active {
+        background-color: rgba(0, 168, 255, 0.3);
+        border-left: 3px solid var(--neon-cyan);
+        color: var(--neon-cyan);
+    }
+    
+    .content-section {
+        display: none;
+    }
+    
+    .content-section.active {
+        display: block;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+</head>
+<body class="grid-pattern">
+    <nav class="bg-[#001f54] bg-opacity-90 backdrop-blur-md border-b border-[#00a8ff] fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <span class="text-2xl font-bold gradient-text font-rajdhani">AQUIX</span>
+                        <span class="ml-1 text-sm text-[#00f5ff]">STUDIO</span>
+                    </div>
+                    <div class="hidden md:block ml-10">
+                        <div class="flex space-x-8">
+                            <a href="index.html" class="text-white hover:text-[#00f5ff] px-3 py-2 text-sm font-medium transition-all duration-300">Home</a>
+                            <a href="index.html#services" class="text-white hover:text-[#00f5ff] px-3 py-2 text-sm font-medium transition-all duration-300">Services</a>
+                            <a href="freelance.html" class="text-white hover:text-[#00f5ff] px-3 py-2 text-sm font-medium transition-all duration-300">Freelance Hub</a>
+                            <a href="index.html#about" class="text-white hover:text-[#00f5ff] px-3 py-2 text-sm font-medium transition-all duration-300">About</a>
+                            <a href="legal.html" class="text-white hover:text-[#00f5ff] px-3 py-2 text-sm font-medium transition-all duration-300">Legal</a>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-[#001f54]">
+                <a href="index.html" class="text-white block px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="marketplace.html" class="text-white block px-3 py-2 rounded-md text-base font-medium">Marketplace</a>
+                <a href="freelance.html" class="text-white block px-3 py-2 rounded-md text-base font-medium">Freelance Hub</a>
+                <a href="legal.html" class="text-white block px-3 py-2 rounded-md text-base font-medium">Legal</a>
+                <button class="w-full pixel-border px-4 py-2 text-sm font-medium text-white bg-[#001f54] mt-2">
+                    Client Dashboard
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Legal Content -->
+    <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row gap-8">
+                <!-- Legal Navigation -->
+                <div class="w-full md:w-64 flex-shrink-0">
+                    <div class="legal-nav pixel-border p-4 bg-[#001f54] bg-opacity-50 rounded-lg">
+                        <h3 class="text-xl font-bold font-rajdhani mb-4 gradient-text">Legal Documents</h3>
+                        <a href="#terms" class="active" data-section="terms">Terms of Service</a>
+                        <a href="#privacy" data-section="privacy">Privacy Policy</a>
+                        <a href="#cookies" data-section="cookies">Cookie Policy</a>
+                        <a href="#refund" data-section="refund">Refund Policy</a>
+                        <a href="#freelancer" data-section="freelancer">Freelancer Agreement</a>
+                    </div>
+                </div>
+                
+                <!-- Legal Content -->
+                <div class="flex-1">
+                    <!-- Terms of Service -->
+                    <div id="terms-content" class="content-section active">
+                        <div class="legal-section pixel-border">
+                            <h1 class="text-3xl font-bold font-rajdhani mb-6 gradient-text">Terms of Service</h1>
+                            <p class="mb-6">Last Updated: January 1, 2025</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">1. Acceptance of Terms</h2>
+                            <p>By accessing or using any services provided by Aquix Studio ("we," "us," or "our"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, you may not use our services.</p>
+                            
+                            <h3 class="text-xl font-bold font-rajdhani">1.1 Eligibility</h3>
+                            <p>You must be at least 13 years old to use our services. By using our services, you represent that you meet this age requirement.</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">2. Services</h2>
+                            <p>Aquix Studio provides Minecraft plugin development services, including but not limited to:</p>
+                            <ul>
+                                <li>Custom plugin development</li>
+                                <li>Plugin marketplace</li>
+                                <li>Freelance developer network</li>
+                                <li>Server configuration services</li>
+                            </ul>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">3. User Responsibilities</h2>
+                            <p>When using our services, you agree not to:</p>
+                            <ul>
+                                <li>Use our plugins or services for illegal purposes</li>
+                                <li>Reverse engineer, decompile, or disassemble our plugins</li>
+                                <li>Resell or redistribute our plugins without permission</li>
+                                <li>Use our services to harass or harm others</li>
+                            </ul>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">4. Intellectual Property</h2>
+                            <p>All plugins and content provided by Aquix Studio are protected by copyright and other intellectual property laws. You are granted a limited, non-exclusive license to use purchased plugins on your Minecraft servers.</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">5. Limitation of Liability</h2>
+                            <p>Aquix Studio shall not be liable for any indirect, incidental, special, or consequential damages resulting from the use or inability to use our services.</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">6. Changes to Terms</h2>
+                            <p>We reserve the right to modify these Terms at any time. Continued use of our services after changes constitutes acceptance of the new Terms.</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">7. Contact Information</h2>
+                            <p>For questions about these Terms, please contact us at legal@aquixstudio.com.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Privacy Policy -->
+                    <div id="privacy-content" class="content-section">
+                        <div class="legal-section pixel-border">
+                            <h1 class="text-3xl font-bold font-rajdhani mb-6 gradient-text">Privacy Policy</h1>
+                            <p class="mb-6">Last Updated: January 1, 2025</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">1. Information We Collect</h2>
+                            <p>We may collect the following types of information:</p>
+                            <ul>
+                                <li><strong>Personal Information:</strong> Name, email address, payment information when you make a purchase</li>
+                                <li><strong>Usage Data:</strong> Information about how you use our website and services</li>
+                                <li><strong>Technical Data:</strong> IP address, browser type, device information</li>
+                            </ul>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">2. How We Use Your Information</h2>
+                            <p>We use collected information to:</p>
+                            <ul>
+                                <li>Provide and maintain our services</li>
+                                <li>Process transactions</li>
+                                <li>Improve user experience</li>
+                                <li>Communicate with users</li>
+                                <li>Prevent fraud and abuse</li>
+                            </ul>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">3. Data Sharing</h2>
+                            <p>We do not sell your personal information. We may share information with:</p>
+                            <ul>
+                                <li>Service providers necessary to operate our business</li>
+                                <li>Legal authorities when required by law</li>
+                                <li>Third parties with your consent</li>
+                            </ul>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">4. Data Security</h2>
+                            <p>We implement appropriate security measures to protect your data. However, no method of transmission over the Internet is 100% secure.</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">5. Your Rights</h2>
+                            <p>Depending on your jurisdiction, you may have rights to:</p>
+                            <ul>
+                                <li>Access your personal data</li>
+                                <li>Request correction or deletion</li>
+                                <li>Object to processing</li>
+                                <li>Request data portability</li>
+                            </ul>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">6. Changes to This Policy</h2>
+                            <p>We may update this Privacy Policy periodically. We will notify users of significant changes.</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">7. Contact Us</h2>
+                            <p>For privacy-related inquiries, contact us at privacy@aquixstudio.com.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Cookie Policy -->
+                    <div id="cookies-content" class="content-section">
+                        <div class="legal-section pixel-border">
+                            <h1 class="text-3xl font-bold font-rajdhani mb-6 gradient-text">Cookie Policy</h1>
+                            <p class="mb-6">Last Updated: January 1, 2025</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">1. What Are Cookies?</h2>
+                            <p>Cookies are small text files stored on your device when you visit websites. They help websites remember information about your visit.</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">2. How We Use Cookies</h2>
+                            <p>We use cookies for:</p>
+                            <ul>
+                                <li><strong>Essential Cookies:</strong> Necessary for website functionality</li>
+                                <li><strong>Performance Cookies:</strong> Help us understand how visitors use our site</li>
+                                <li><strong>Functionality Cookies:</strong> Remember your preferences</li>
+                                <li><strong>Marketing Cookies:</strong> Used for advertising purposes</li>
+                            </ul>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">3. Third-Party Cookies</h2>
+                            <p>We may use cookies from trusted third parties such as:</p>
+                            <ul>
+                                <li>Google Analytics for website analytics</li>
+                                <li>Payment processors for transaction security</li>
+                                <li>Advertising networks for relevant ads</li>
+                            </ul>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">4. Managing Cookies</h2>
+                            <p>You can control cookies through your browser settings. However, disabling essential cookies may affect website functionality.</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">5. Changes to This Policy</h2>
+                            <p>We may update this Cookie Policy as our practices change.</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">6. Contact Us</h2>
+                            <p>For questions about our Cookie Policy, contact us at privacy@aquixstudio.com.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Refund Policy -->
+                    <div id="refund-content" class="content-section">
+                        <div class="legal-section pixel-border">
+                            <h1 class="text-3xl font-bold font-rajdhani mb-6 gradient-text">Refund Policy</h1>
+                            <p class="mb-6">Last Updated: January 1, 2025</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">1. Digital Products</h2>
+                            <p>Due to the nature of digital products, all sales of plugins and digital goods are final. We do not offer refunds except in the following circumstances:</p>
+                            <ul>
+                                <li>The product is fundamentally non-functional</li>
+                                <li>You have not downloaded the product</li>
+                                <li>The product was misrepresented</li>
+                            </ul>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">2. Refund Requests</h2>
+                            <p>To request a refund:</p>
+                            <ol>
+                                <li>Contact support@aquixstudio.com within 14 days of purchase</li>
+                                <li>Provide your order number and reason for request</li>
+                                <li>Include any evidence supporting your claim</li>
+                            </ol>
+                            <p>We will review your request and respond within 5 business days.</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">3. Service Refunds</h2>
+                            <p>For custom development services:</p>
+                            <ul>
+                                <li>Deposits are non-refundable</li>
+                                <li>Partial refunds may be issued for incomplete work</li>
+                                <li>No refunds after project completion</li>
+                            </ul>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">4. Chargebacks</h2>
+                            <p>Unauthorized chargebacks will result in permanent account suspension and possible legal action.</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">5. Contact Us</h2>
+                            <p>For refund inquiries, contact support@aquixstudio.com.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Freelancer Agreement -->
+                    <div id="freelancer-content" class="content-section">
+                        <div class="legal-section pixel-border">
+                            <h1 class="text-3xl font-bold font-rajdhani mb-6 gradient-text">Freelancer Agreement</h1>
+                            <p class="mb-6">Last Updated: January 1, 2025</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">1. Freelancer Network</h2>
+                            <p>Aquix Studio operates a network of freelance developers ("Freelancers") who provide services to clients through our platform.</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">2. Independent Contractors</h2>
+                            <p>Freelancers are independent contractors, not employees of Aquix Studio. Freelancers are responsible for their own taxes, insurance, and business expenses.</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">3. Freelancer Responsibilities</h2>
+                            <p>Freelancers agree to:</p>
+                            <ul>
+                                <li>Provide accurate information about skills and experience</li>
+                                <li>Deliver work meeting quality standards</li>
+                                <li>Meet agreed-upon deadlines</li>
+                                <li>Maintain client confidentiality</li>
+                                <li>Not solicit clients outside the platform</li>
+                            </ul>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">4. Payment Terms</h2>
+                            <p>Freelancers receive payment according to the following terms:</p>
+                            <ul>
+                                <li>80% of project fee paid to Freelancer</li>
+                                <li>20% platform fee retained by Aquix Studio</li>
+                                <li>Payments processed weekly via PayPal or other approved methods</li>
+                                <li>Minimum $50 balance required for payout</li>
+                            </ul>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">5. Intellectual Property</h2>
+                            <p>Work created for clients through the platform belongs to the client upon full payment. Freelancers may showcase work in their portfolios.</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">6. Dispute Resolution</h2>
+                            <p>Aquix Studio will mediate disputes between Freelancers and clients. Our decision in such matters is final.</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">7. Termination</h2>
+                            <p>Either party may terminate this agreement with 30 days notice. Aquix Studio may terminate immediately for violation of terms.</p>
+                            
+                            <h2 class="text-2xl font-bold font-rajdhani">8. Contact</h2>
+                            <p>For questions about this agreement, contact freelancers@aquixstudio.com.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#0a1128] border-t border-[#001f54] py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <span class="text-2xl font-bold font-rajdhani gradient-text">AQUIX</span>
+                        <span class="ml-1 text-sm text-[#00f5ff]">STUDIO</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        Premium Minecraft development services and freelance network since 2025.
+                    </p>
+                    <div class="flex space-x-4 mt-6">
+                        <a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold font-rajdhani mb-4 text-white">Services</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Plugin Development</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Custom Builds</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Server Configuration</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Freelance Hub</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Plugin Marketplace</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold font-rajdhani mb-4 text-white">Company</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Our Team</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Careers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold font-rajdhani mb-4 text-white">Legal</h3>
+                    <ul class="space-y-2">
+                        <li><a href="legal.html#terms" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Terms of Service</a></li>
+                        <li><a href="legal.html#privacy" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Privacy Policy</a></li>
+                        <li><a href="legal.html#cookies" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Cookie Policy</a></li>
+                        <li><a href="legal.html#refund" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Refund Policy</a></li>
+                        <li><a href="legal.html#freelancer" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Freelancer Agreement</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-12 pt-8 border-t border-[#001f54] text-center">
+                <p class="text-gray-500 text-sm">
+                    &copy; 2025 Aquix Studio. All rights reserved. Minecraft is a trademark of Mojang Studios. Not affiliated with Mojang or Microsoft.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+        
+        // Legal navigation
+        document.querySelectorAll('.legal-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Update active nav link
+                document.querySelectorAll('.legal-nav a').forEach(navLink => {
+                    navLink.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Show corresponding content
+                const section = this.getAttribute('data-section');
+                document.querySelectorAll('.content-section').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(`${section}-content`).classList.add('active');
+                
+                // Update URL hash
+                window.location.hash = this.getAttribute('href');
+            });
+        });
+        
+        // Load correct section based on URL hash
+        window.addEventListener('load', function() {
+            const hash = window.location.hash.substring(1) || 'terms';
+            const navLink = document.querySelector(`.legal-nav a[href="#${hash}"]`);
+            if (navLink) {
+                navLink.click();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aquix Studio | Next-Gen Minecraft Services</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-blue: #0a1128;
+            --electric-blue: #00a8ff;
+            --neon-cyan: #00f5ff;
+            --dark-accent: #001f54;
+            --highlight: #7b2dff;
+        }
+        
+        body {
+            font-family: 'Oxanium', sans-serif;
+            background-color: var(--deep-blue);
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, .font-rajdhani {
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 0.05em;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, var(--electric-blue), var(--neon-cyan));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .pixel-border {
+            position: relative;
+            border: 2px solid var(--electric-blue);
+            box-shadow: 0 0 15px rgba(0, 168, 255, 0.3);
+        }
+        
+        .pixel-border::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 1px solid var(--neon-cyan);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+        }
+        
+        .grid-pattern {
+            background-image: 
+                linear-gradient(rgba(0, 168, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 168, 255, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        
+        #blockchain-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        /* Unique interactive elements */
+        .service-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 168, 255, 0.4);
+        }
+        
+        .minecraft-input {
+            background: rgba(0, 40, 85, 0.5);
+            border: 2px solid var(--electric-blue);
+            padding: 12px 15px;
+            color: white;
+            font-family: 'Oxanium', sans-serif;
+        }
+        
+        .minecraft-input:focus {
+            outline: none;
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--dark-accent);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--electric-blue);
+            border-radius: 4px;
+        }
+        
+        /* Floating cubes animation */
+        .floating-cube {
+            position: absolute;
+            background: rgba(0, 168, 255, 0.1);
+            border: 1px solid rgba(0, 168, 255, 0.3);
+            animation: float 8s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+    </style>
+</head>
+<body class="grid-pattern">
+    <!-- Floating cubes background elements -->
+    <div class="floating-cube w-8 h-8 top-1/4 left-10"></div>
+    <div class="floating-cube w-12 h-12 bottom-1/3 right-20"></div>
+    <div class="floating-cube w-6 h-6 top-1/2 left-1/4"></div>
+    
+    <!-- Blockchain animation canvas -->
+    <canvas id="blockchain-animation"></canvas>
+    
+    <nav class="bg-[#001f54] bg-opacity-90 backdrop-blur-md border-b border-[#00a8ff] fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <span class="text-2xl font-bold gradient-text font-rajdhani">AQUIX</span>
+                        <span class="ml-1 text-sm text-[#00f5ff]">STUDIO</span>
+                    </div>
+                    <div class="hidden md:block ml-10">
+                        <div class="flex space-x-8">
+                            <a href="/" class="text-white hover:text-[#00f5ff] px-3 py-2 text-sm font-medium transition-all duration-300">Home</a>
+                            <a href="index.html#services" class="text-white hover:text-[#00f5ff] px-3 py-2 text-sm font-medium transition-all duration-300">Services</a>
+                            <a href="freelance.html" class="text-white hover:text-[#00f5ff] px-3 py-2 text-sm font-medium transition-all duration-300">Freelance Hub</a>
+                            <a href="index.html#about" class="text-white hover:text-[#00f5ff] px-3 py-2 text-sm font-medium transition-all duration-300">About</a>
+                            <a href="legal.html" class="text-white hover:text-[#00f5ff] px-3 py-2 text-sm font-medium transition-all duration-300">Legal</a>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <a href"{{ url_for('login') }}">
+                    <button class="w-full pixel-border px-4 py-2 text-sm font-medium text-white bg-[#001f54] mt-2">
+                        Client Dashboard
+                    </button>
+                </a>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white focus:outline-none">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-[#001f54]">
+                <a href="#home" class="text-white block px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="#services" class="text-white block px-3 py-2 rounded-md text-base font-medium">Services</a>
+                <a href="#freelance" class="text-white block px-3 py-2 rounded-md text-base font-medium">Freelance Hub</a>
+                <a href="#portfolio" class="text-white block px-3 py-2 rounded-md text-base font-medium">Portfolio</a>
+                <a href="#about" class="text-white block px-3 py-2 rounded-md text-base font-medium">About</a>
+                <button class="w-full pixel-border px-4 py-2 text-sm font-medium text-white bg-[#001f54] mt-2">
+                    Client Dashboard
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section id="home" class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="relative z-10">
+                    <h1 class="text-5xl md:text-6xl font-bold mb-6 font-rajdhani">
+                        <span class="gradient-text">Elevate</span> Your Minecraft Experience
+                    </h1>
+                    <p class="text-lg text-gray-300 mb-8 max-w-lg">
+                        Aquix Studio delivers premium Minecraft plugins, custom builds, and server configurations with our unique freelance-powered development ecosystem.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#services">
+                            <button class="pixel-border px-8 py-3 text-lg font-medium text-white bg-gradient-to-r from-[#00a8ff] to-[#0077ff] hover:from-[#00c3ff] hover:to-[#0095ff] transition-all duration-300 glow-effect">
+                                Explore Services
+                            </button>
+    
+                        </a>
+
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="pixel-border p-2 bg-[#001f54] bg-opacity-50 rounded-lg">
+                        <div class="relative h-96 w-full">
+                            <!-- 3D Minecraft block animation placeholder -->
+                            <div id="minecraft-block" class="w-full h-full flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="inline-block animate-pulse">
+                                        <div class="w-20 h-20 bg-gradient-to-br from-[#00a8ff] to-[#7b2dff] rotate-45 mb-4 mx-auto"></div>
+                                    </div>
+                                    <p class="text-[#00f5ff]">Interactive 3D Block Loading...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-[#7b2dff] rounded-full mix-blend-screen opacity-20 blur-xl"></div>
+                    <div class="absolute -top-6 -right-6 w-40 h-40 bg-[#00f5ff] rounded-full mix-blend-screen opacity-20 blur-xl"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stats bar -->
+        <div class="max-w-7xl mx-auto mt-24 grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="pixel-border p-6 text-center bg-[#001f54] bg-opacity-50">
+                <div class="text-4xl font-bold font-rajdhani gradient-text">150+</div>
+                <div class="text-gray-300 mt-2">Plugins Developed</div>
+            </div>
+            <div class="pixel-border p-6 text-center bg-[#001f54] bg-opacity-50">
+                <div class="text-4xl font-bold font-rajdhani gradient-text">2K+</div>
+                <div class="text-gray-300 mt-2">Happy Clients</div>
+            </div>
+            <div class="pixel-border p-6 text-center bg-[#001f54] bg-opacity-50">
+                <div class="text-4xl font-bold font-rajdhani gradient-text">50+</div>
+                <div class="text-gray-300 mt-2">Freelancers</div>
+            </div>
+            <div class="pixel-border p-6 text-center bg-[#001f54] bg-opacity-50">
+                <div class="text-4xl font-bold font-rajdhani gradient-text">24/7</div>
+                <div class="text-gray-300 mt-2">Support</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Services Section -->
+    <section id="services" class="py-20 px-4 sm:px-6 lg:px-8 bg-[#001f54] bg-opacity-30">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold font-rajdhani mb-4 gradient-text">Our Unique Services</h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    We offer more than just development - we provide a complete ecosystem for Minecraft server owners.
+                </p>
+            </div>
+            
+            <!-- Service cards with interactive elements -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Plugin Development -->
+                <div class="service-card pixel-border p-8 bg-[#001f54] bg-opacity-50 rounded-lg transition-all duration-500 cursor-pointer">
+                    <div class="w-16 h-16 mb-6 rounded-lg bg-gradient-to-br from-[#00a8ff] to-[#7b2dff] flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold font-rajdhani mb-3">Plugin Development</h3>
+                    <p class="text-gray-300 mb-4">
+                        Custom plugins tailored to your server's unique needs, with performance optimization and regular updates.
+                    </p>
+                    <div class="mt-6">
+                        <a href="https://discord.gg/KWuusmts9g">
+                            <button class="text-[#00f5ff] hover:text-white flex items-center group">
+                                Configure Your Plugin
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </a>
+
+                    </div>
+                </div>
+                
+                <!-- Custom Builds -->
+                <div class="service-card pixel-border p-8 bg-[#001f54] bg-opacity-50 rounded-lg transition-all duration-500 cursor-pointer">
+                    <div class="w-16 h-16 mb-6 rounded-lg bg-gradient-to-br from-[#7b2dff] to-[#ff00e4] flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold font-rajdhani mb-3">Custom Builds</h3>
+                    <p class="text-gray-300 mb-4">
+                        Stunning Minecraft builds from our network of professional builders, with world editing and schematic delivery.
+                    </p>
+                    <div class="mt-6">
+                        <a href="https://discord.gg/KWuusmts9g">
+                        <button class="text-[#00f5ff] hover:text-white flex items-center group">
+                            Design Your World
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Server Configuration -->
+                <div class="service-card pixel-border p-8 bg-[#001f54] bg-opacity-50 rounded-lg transition-all duration-500 cursor-pointer">
+                    <div class="w-16 h-16 mb-6 rounded-lg bg-gradient-to-br from-[#00f5ff] to-[#00a8ff] flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold font-rajdhani mb-3">Server Configuration</h3>
+                    <p class="text-gray-300 mb-4">
+                        Complete server setup, optimization, and maintenance to ensure peak performance and player experience.
+                    </p>
+                    <div class="mt-6">
+                        <a href="https://discord.gg/KWuusmts9g">
+                        <button class="text-[#00f5ff] hover:text-white flex items-center group">
+                            Optimize Your Server
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Freelance Hub -->
+                <div class="service-card pixel-border p-8 bg-[#001f54] bg-opacity-50 rounded-lg transition-all duration-500 cursor-pointer">
+                    <div class="w-16 h-16 mb-6 rounded-lg bg-gradient-to-br from-[#ff00e4] to-[#ff7b00] flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold font-rajdhani mb-3">Freelance Hub</h3>
+                    <p class="text-gray-300 mb-4">
+                        Our unique platform connects you with vetted Minecraft freelancers, with Aquix managing quality assurance.
+                    </p>
+                    <div class="mt-6">
+                        <a href="freelance.html">
+                            <button class="text-[#00f5ff] hover:text-white flex items-center group">
+                                Access The Hub
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Plugin Marketplace -->
+                <div class="service-card pixel-border p-8 bg-[#001f54] bg-opacity-50 rounded-lg transition-all duration-500 cursor-pointer">
+                    <div class="w-16 h-16 mb-6 rounded-lg bg-gradient-to-br from-[#ff7b00] to-[#ffcc00] flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold font-rajdhani mb-3">Plugin Marketplace</h3>
+                    <p class="text-gray-300 mb-4">
+                        Browse our catalog of pre-made plugins that can be customized and deployed to your server instantly.
+                    </p>
+                    <div class="mt-6">
+                        <a href="https://discord.gg/KWuusmts9g">
+                            <button class="text-[#00f5ff] hover:text-white flex items-center group">
+                                Visit Marketplace
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </a>
+                        
+                    </div>
+                </div>
+                
+                <!-- Server Monitoring -->
+                <div class="service-card pixel-border p-8 bg-[#001f54] bg-opacity-50 rounded-lg transition-all duration-500 cursor-pointer">
+                    <div class="w-16 h-16 mb-6 rounded-lg bg-gradient-to-br from-[#ffcc00] to-[#00f5ff] flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold font-rajdhani mb-3">Server Monitoring</h3>
+                    <p class="text-gray-300 mb-4">
+                        Real-time performance tracking and alerts to keep your server running smoothly 24/7.
+                    </p>
+
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Unique Service Configurator -->
+
+    </section>
+    
+    <!-- Freelance Hub Section -->
+    <section id="freelance" class="py-20 px-4 sm:px-6 lg:px-8 bg-[#0a1128]">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold font-rajdhani mb-4 gradient-text">Freelance Hub</h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    Our unique platform connects clients with vetted Minecraft freelancers, with Aquix managing quality assurance.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h3 class="text-3xl font-bold font-rajdhani mb-6 text-[#00a8ff]">How It Works</h3>
+                    <div class="space-y-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0 mr-4">
+                                <div class="w-12 h-12 rounded-full bg-[#001f54] flex items-center justify-center text-xl font-bold font-rajdhani gradient-text">1</div>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold font-rajdhani mb-2 text-white">Submit Your Request</h4>
+                                <p class="text-gray-300">
+                                    Open a ticket describing your project needs, budget, and timeline. Our AI will analyze your requirements.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex">
+                            <div class="flex-shrink-0 mr-4">
+                                <div class="w-12 h-12 rounded-full bg-[#001f54] flex items-center justify-center text-xl font-bold font-rajdhani gradient-text">2</div>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold font-rajdhani mb-2 text-white">Freelancer Matching</h4>
+                                <p class="text-gray-300">
+                                    Our system matches you with 3-5 qualified freelancers from our network based on skills, availability, and ratings.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex">
+                            <div class="flex-shrink-0 mr-4">
+                                <div class="w-12 h-12 rounded-full bg-[#001f54] flex items-center justify-center text-xl font-bold font-rajdhani gradient-text">3</div>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold font-rajdhani mb-2 text-white">Project Execution</h4>
+                                <p class="text-gray-300">
+                                    Aquix oversees the project, handles payments, and ensures quality standards are met before delivery.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-12">
+                        <a href="freelance.html">
+                            <button class="pixel-border px-8 py-3 text-lg font-medium text-white bg-gradient-to-r from-[#7b2dff] to-[#ff00e4] hover:from-[#8d40ff] hover:to-[#ff1ae8] transition-all duration-300 glow-effect">
+                                Join As Freelancer
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <div class="pixel-border p-2 bg-[#001f54] bg-opacity-50 rounded-lg">
+                        <!-- Freelancer matching interface simulation -->
+                        <div class="bg-[#0a1128] p-6 rounded">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-xl font-bold font-rajdhani text-[#00f5ff]">Freelancer Matching</h3>
+                                <div class="text-sm text-gray-400">AI-Powered</div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-sm text-gray-300">Project Compatibility</span>
+                                    <span class="text-sm font-bold text-[#00a8ff]">92% Match</span>
+                                </div>
+                                <div class="w-full bg-[#001f54] rounded-full h-2.5">
+                                    <div class="bg-gradient-to-r from-[#00a8ff] to-[#7b2dff] h-2.5 rounded-full" style="width: 92%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <!-- Freelancer card 1 -->
+                                <div class="p-4 bg-[#001f54] rounded-lg border border-[#00a8ff] border-opacity-30">
+                                    <div class="flex items-center">
+                                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#00a8ff] to-[#7b2dff] flex items-center justify-center text-xl font-bold mr-4">
+                                            JD
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-white">JavaDev_42</h4>
+                                            <div class="flex items-center mt-1">
+                                                <div class="flex">
+                                                    <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                                    </svg>
+                                                    <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                                    </svg>
+                                                    <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                                    </svg>
+                                                    <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                                    </svg>
+                                                    <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                                    </svg>
+                                                </div>
+                                                <span class="text-xs text-gray-400 ml-1">(47 projects)</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <div class="text-sm text-gray-300 mb-2">Specialties: Java, Spigot, Custom Mechanics</div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm text-[#00a8ff] font-bold">$35-75/hour</span>
+                                            <button class="text-xs pixel-border px-3 py-1 bg-[#001f54] hover:bg-[#00308a] transition-all">
+                                                View Profile
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Freelancer card 2 -->
+                                <div class="p-4 bg-[#001f54] rounded-lg border border-[#7b2dff] border-opacity-30">
+                                    <div class="flex items-center">
+                                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#7b2dff] to-[#ff00e4] flex items-center justify-center text-xl font-bold mr-4">
+                                            MB
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-white">MegaBuilder</h4>
+                                            <div class="flex items-center mt-1">
+                                                <div class="flex">
+                                                    <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                                    </svg>
+                                                    <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                                    </svg>
+                                                    <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                                    </svg>
+                                                    <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                                    </svg>
+                                                    <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                                    </svg>
+                                                </div>
+                                                <span class="text-xs text-gray-400 ml-1">(112 projects)</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <div class="text-sm text-gray-300 mb-2">Specialties: Medieval Builds, Terraforming, WorldEdit</div>
+                                        <div class="flex justify-between items-center">
+                                            <span class="text-sm text-[#7b2dff] font-bold">$25-50/hour</span>
+                                            <button class="text-xs pixel-border px-3 py-1 bg-[#001f54] hover:bg-[#00308a] transition-all">
+                                                View Profile
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 pt-4 border-t border-[#001f54]">
+                                <button class="w-full pixel-border px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-[#00a8ff] to-[#0077ff] hover:from-[#00c3ff] hover:to-[#0095ff] transition-all">
+                                    See More Matches (3+)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Unique Features -->
+            <div class="mt-24">
+                <h3 class="text-3xl font-bold font-rajdhani mb-8 text-center gradient-text">Why Our Freelance Hub is Unique</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="pixel-border p-6 bg-[#001f54] bg-opacity-50 rounded-lg">
+                        <div class="w-14 h-14 mb-4 rounded-lg bg-gradient-to-br from-[#00a8ff] to-[#7b2dff] flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold font-rajdhani mb-2">Vetted Talent</h4>
+                        <p class="text-gray-300">
+                            Every freelancer undergoes rigorous testing and review before joining our network. We verify skills with practical Minecraft challenges.
+                        </p>
+                    </div>
+                    
+                    <div class="pixel-border p-6 bg-[#001f54] bg-opacity-50 rounded-lg">
+                        <div class="w-14 h-14 mb-4 rounded-lg bg-gradient-to-br from-[#7b2dff] to-[#ff00e4] flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold font-rajdhani mb-2">AI-Powered Matching</h4>
+                        <p class="text-gray-300">
+                            Our proprietary algorithm analyzes 50+ factors to match you with the perfect freelancer for your specific project needs.
+                        </p>
+                    </div>
+                    
+                    <div class="pixel-border p-6 bg-[#001f54] bg-opacity-50 rounded-lg">
+                        <div class="w-14 h-14 mb-4 rounded-lg bg-gradient-to-br from-[#00f5ff] to-[#00a8ff] flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold font-rajdhani mb-2">Escrow Protection</h4>
+                        <p class="text-gray-300">
+                            Funds are held securely until project completion. We mediate any disputes and guarantee quality before payment is released.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+
+    
+    <!-- About Section -->
+    <section id="about" class="py-20 px-4 sm:px-6 lg:px-8 bg-[#0a1128]">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-4xl font-bold font-rajdhani mb-6 gradient-text">About Aquix Studio</h2>
+                    <p class="text-gray-300 mb-6">
+                        Founded in 2025, Aquix Studio began as a small team of Minecraft enthusiasts with a passion for creating unique server experiences. 
+                        Today, we've grown into a full-service Minecraft development studio with a network of over 50 vetted freelancers worldwide.
+                    </p>
+                    <p class="text-gray-300 mb-6">
+                        What sets us apart is our hybrid model - we combine the reliability of a professional studio with the flexibility and diversity of 
+                        a freelance network. This allows us to tackle projects of any scale while maintaining competitive pricing.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-5 h-5 rounded-full bg-[#00f5ff]"></div>
+                            </div>
+                            <p class="ml-3 text-gray-300">
+                                <span class="font-bold text-white">500+</span> successful projects delivered
+                            </p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-5 h-5 rounded-full bg-[#00f5ff]"></div>
+                            </div>
+                            <p class="ml-3 text-gray-300">
+                                <span class="font-bold text-white">98%</span> client satisfaction rate
+                            </p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-5 h-5 rounded-full bg-[#00f5ff]"></div>
+                            </div>
+                            <p class="ml-3 text-gray-300">
+                                <span class="font-bold text-white">24/7</span> support with 2-hour response guarantee
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="pixel-border p-2 bg-[#001f54] bg-opacity-50 rounded-lg">
+                        <div class="relative h-96 w-full">
+                            <!-- Team showcase/interactive element -->
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="inline-grid grid-cols-3 gap-2 mb-6">
+                                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-[#00a8ff] to-[#7b2dff] flex items-center justify-center text-xl font-bold">JD</div>
+                                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-[#7b2dff] to-[#ff00e4] flex items-center justify-center text-xl font-bold">MB</div>
+                                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-[#00f5ff] to-[#00a8ff] flex items-center justify-center text-xl font-bold">SC</div>
+                                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-[#ff00e4] to-[#ff7b00] flex items-center justify-center text-xl font-bold">TB</div>
+                                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-[#ff7b00] to-[#ffcc00] flex items-center justify-center text-xl font-bold">CW</div>
+                                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-[#ffcc00] to-[#00f5ff] flex items-center justify-center text-xl font-bold">AB</div>
+                                    </div>
+                                    <h3 class="text-2xl font-bold font-rajdhani mb-2 text-white">Our Global Team</h3>
+                                    <p class="text-gray-300 max-w-md mx-auto">
+                                        Meet some of our core team members and top-rated freelancers from around the world.
+                                    </p>
+                                    <a href="https://discord.gg/KWuusmts9g">
+                                    <button class="mt-6 pixel-border px-6 py-2 text-sm font-medium text-white bg-[#001f54] hover:bg-[#00308a] transition-all">
+                                        Meet The Team
+                                    </button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-[#7b2dff] rounded-full mix-blend-screen opacity-20 blur-xl"></div>
+                    <div class="absolute -top-6 -right-6 w-40 h-40 bg-[#00f5ff] rounded-full mix-blend-screen opacity-20 blur-xl"></div>
+                </div>
+            </div>
+            
+            <!-- Testimonials -->
+            <div class="mt-24">
+                <h3 class="text-3xl font-bold font-rajdhani mb-12 text-center gradient-text">What Our Clients Say</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Testimonial 1 -->
+                    <div class="pixel-border p-6 bg-[#001f54] bg-opacity-50 rounded-lg">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#00a8ff] to-[#7b2dff] flex items-center justify-center text-xl font-bold mr-4">
+                                SK
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white">SkyKing</h4>
+                                <div class="text-xs text-[#00a8ff]">Owner of SkyNetwork</div>
+                            </div>
+                        </div>
+                        <div class="text-gray-300 mb-4">
+                            "Aquix developed a custom skyblock plugin that doubled our player count. Their freelance network provided specialists we couldn't have found on our own."
+                        </div>
+                        <div class="flex">
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 2 -->
+                    <div class="pixel-border p-6 bg-[#001f54] bg-opacity-50 rounded-lg">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#7b2dff] to-[#ff00e4] flex items-center justify-center text-xl font-bold mr-4">
+                                RC
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white">RealmCrafter</h4>
+                                <div class="text-xs text-[#7b2dff]">Owner of RealmCraft</div>
+                            </div>
+                        </div>
+                        <div class="text-gray-300 mb-4">
+                            "The medieval city build exceeded our expectations. Aquix matched us with an incredible builder who understood our vision perfectly."
+                        </div>
+                        <div class="flex">
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 3 -->
+                    <div class="pixel-border p-6 bg-[#001f54] bg-opacity-50 rounded-lg">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#00f5ff] to-[#00a8ff] flex items-center justify-center text-xl font-bold mr-4">
+                                FW
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white">FactionWars</h4>
+                                <div class="text-xs text-[#00f5ff]">Owner of FactionWorld</div>
+                            </div>
+                        </div>
+                        <div class="text-gray-300 mb-4">
+                            "Aquix's server optimization took our TPS from 12 to 20. Their technical expertise saved our failing server."
+                        </div>
+                        <div class="flex">
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                            <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-[#0a1128] to-[#001f54]">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl font-bold font-rajdhani mb-6 gradient-text">Ready to Elevate Your Minecraft Server?</h2>
+            <p class="text-xl text-gray-300 mb-8">
+                Whether you need a custom plugin, an amazing build, or server optimization, Aquix Studio has you covered.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="https://discord.gg/KWuusmts9g">
+                    <button class="pixel-border px-8 py-3 text-lg font-medium text-white bg-gradient-to-r from-[#00a8ff] to-[#0077ff] hover:from-[#00c3ff] hover:to-[#0095ff] transition-all duration-300 glow-effect">
+                        Get Started Now
+                    </button>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-[#0a1128] border-t border-[#001f54] py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <span class="text-2xl font-bold font-rajdhani gradient-text">AQUIX</span>
+                        <span class="ml-1 text-sm text-[#00f5ff]">STUDIO</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        Premium Minecraft development services and freelance network since 2025.
+                    </p>
+                    <div class="flex space-x-4 mt-6">
+                        <a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold font-rajdhani mb-4 text-white">Services</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Plugin Development</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Custom Builds</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Server Configuration</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Freelance Hub</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Plugin Marketplace</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold font-rajdhani mb-4 text-white">Company</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html#about" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Our Team</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Careers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Blog</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold font-rajdhani mb-4 text-white">Legal</h3>
+                    <ul class="space-y-2">
+                        <li><a href="legal.html#terms" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Terms of Service</a></li>
+                        <li><a href="legal.html#privacy" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Privacy Policy</a></li>
+                        <li><a href="legal.html#cookies" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Cookie Policy</a></li>
+                        <li><a href="legal.html#refund" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Refund Policy</a></li>
+                        <li><a href="legal.html#freelancer" class="text-gray-400 hover:text-[#00a8ff] transition-colors text-sm">Freelancer Agreement</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-12 pt-8 border-t border-[#001f54] text-center">
+                <p class="text-gray-500 text-sm">
+                    &copy; 2025 Aquix Studio. All rights reserved. Minecraft is a trademark of Mojang Studios. Not affiliated with Mojang or Microsoft.
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+        
+        // Portfolio modal functionality
+        const portfolioItems = document.querySelectorAll('.portfolio-item');
+        const portfolioModal = document.getElementById('portfolio-modal');
+        const closeModal = document.getElementById('close-modal');
+        
+        // Sample portfolio data
+        const portfolioData = [
+            {
+                title: "Skyblock Pro",
+                subtitle: "Custom Plugin Suite",
+                tags: ["Java", "Spigot", "MySQL", "Economy"],
+                image: "https://images.unsplash.com/photo-1607513746994-51f730a44832?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                description: `
+                    <p class="mb-4">Skyblock Pro is a comprehensive plugin suite designed for large-scale skyblock servers. It includes:</p>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Custom island generation with 15+ biome themes</li>
+                        <li>Progressive challenge system with 500+ achievements</li>
+                        <li>Player-driven economy with auction house</li>
+                        <li>Customizable prestige system</li>
+                        <li>Performance optimized for 500+ concurrent players</li>
+                    </ul>
+                    <p class="mt-4">The plugin helped SkyNetwork increase their player base by 120% within 3 months of launch.</p>
+                `,
+                specs: [
+                    { name: "Development Time", value: "6 weeks" },
+                    { name: "Lines of Code", value: "28,500" },
+                    { name: "Database", value: "MySQL" },
+                    { name: "API Integrations", value: "Vault, PlaceholderAPI" },
+                    { name: "Performance", value: "<1% server impact" },
+                    { name: "Price", value: "$1,200" }
+                ],
+                gallery: [
+                    "https://images.unsplash.com/photo-1607513746994-51f730a44832?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                    "https://images.unsplash.com/photo-1627855437693-dcc7b0c4ba7a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                    "https://images.unsplash.com/photo-1587573089734-599851b0c4b4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+                ]
+            },
+            {
+                title: "Medieval Kingdom",
+                subtitle: "Custom Build",
+                tags: ["WorldEdit", "Terraforming", "Interiors", "200+ Buildings"],
+                image: "https://images.unsplash.com/photo-1587573089734-599851b0c4b4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                description: `
+                    <p class="mb-4">This massive medieval city build features:</p>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>200+ unique buildings with detailed interiors</li>
+                        <li>Custom terrain spanning 2000x2000 blocks</li>
+                        <li>Functional castle with redstone gates</li>
+                        <li>Docks with animated ships</li>
+                        <li>Underground sewer system</li>
+                        <li>Marketplace with 50+ stalls</li>
+                    </ul>
+                    <p class="mt-4">The build took our team of 4 builders 3 weeks to complete and became the centerpiece of RealmCraft's RPG server.</p>
+                `,
+                specs: [
+                    { name: "Build Time", value: "3 weeks" },
+                    { name: "Builders", value: "4" },
+                    { name: "Dimensions", value: "2000x2000 blocks" },
+                    { name: "Blocks Placed", value: "~4.2 million" },
+                    { name: "WorldEdit", value: "Extensive use" },
+                    { name: "Price", value: "$2,800" }
+                ],
+                gallery: [
+                    "https://images.unsplash.com/photo-1587573089734-599851b0c4b4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                    "https://images.unsplash.com/photo-1607513746994-51f730a44832?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                    "https://images.unsplash.com/photo-1627855437693-dcc7b0c4ba7a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+                ]
+            },
+            {
+                title: "Factions Extreme",
+                subtitle: "Server Configuration",
+                tags: ["Spigot", "Optimization", "Anti-Cheat", "Economy"],
+                image: "https://images.unsplash.com/photo-1627855437693-dcc7b0c4ba7a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                description: `
+                    <p class="mb-4">Complete server configuration for a high-performance factions server:</p>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Improved TPS from 12 to 20</li>
+                        <li>Custom anti-cheat configuration</li>
+                        <li>Balanced economy system</li>
+                        <li>Automated backup solution</li>
+                        <li>Custom plugin configuration</li>
+                        <li>Staff training materials</li>
+                    </ul>
+                    <p class="mt-4">Our optimizations helped FactionWorld reduce lag complaints by 85% and player retention increased by 40%.</p>
+                `,
+                specs: [
+                    { name: "Configuration Time", value: "2 weeks" },
+                    { name: "Plugins Configured", value: "32" },
+                    { name: "TPS Improvement", value: "12 → 20" },
+                    { name: "Player Retention", value: "+40%" },
+                    { name: "Server Specs", value: "i9-10900K, 64GB RAM" },
+                    { name: "Price", value: "$950" }
+                ],
+                gallery: [
+                    "https://images.unsplash.com/photo-1627855437693-dcc7b0c4ba7a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                    "https://images.unsplash.com/photo-1587573089734-599851b0c4b4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                    "https://images.unsplash.com/photo-1607513746994-51f730a44832?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+                ]
+            }
+        ];
+        
+        // Add click events to portfolio items
+        portfolioItems.forEach((item, index) => {
+            item.addEventListener('click', function() {
+                const data = portfolioData[index];
+                
+                // Set modal content
+                document.getElementById('modal-title').textContent = data.title;
+                document.getElementById('modal-subtitle').textContent = data.subtitle;
+                document.getElementById('modal-image').src = data.image;
+                document.getElementById('modal-image').alt = data.title;
+                document.getElementById('modal-description').innerHTML = data.description;
+                
+                // Clear and add tags
+                const tagsContainer = document.getElementById('modal-tags');
+                tagsContainer.innerHTML = '';
+                data.tags.forEach(tag => {
+                    const span = document.createElement('span');
+                    span.className = 'px-2 py-1 bg-[#001f54] text-xs text-[#00a8ff] rounded-full';
+                    span.textContent = tag;
+                    tagsContainer.appendChild(span);
+                });
+                
+                // Clear and add specs
+                const specsContainer = document.getElementById('modal-specs');
+                specsContainer.innerHTML = '';
+                data.specs.forEach(spec => {
+                    const div = document.createElement('div');
+                    div.className = 'bg-[#001f54] p-3 rounded';
+                    div.innerHTML = `
+                        <div class="text-xs text-gray-400">${spec.name}</div>
+                        <div class="font-bold font-rajdhani text-white">${spec.value}</div>
+                    `;
+                    specsContainer.appendChild(div);
+                });
+                
+                // Clear and add gallery
+                const galleryContainer = document.getElementById('modal-gallery');
+                galleryContainer.innerHTML = '';
+                data.gallery.forEach(img => {
+                    const div = document.createElement('div');
+                    div.className = 'cursor-pointer';
+                    div.innerHTML = `
+                        <img src="${img}" alt="" class="w-full h-24 object-cover pixel-border hover:glow-effect">
+                    `;
+                    galleryContainer.appendChild(div);
+                });
+                
+                // Show modal
+                portfolioModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        // Close modal
+        closeModal.addEventListener('click', function() {
+            portfolioModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+        
+        // Close modal when clicking outside
+        portfolioModal.addEventListener('click', function(e) {
+            if (e.target === portfolioModal) {
+                portfolioModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Blockchain animation
+        function initBlockchainAnimation() {
+            const canvas = document.getElementById('blockchain-animation');
+            if (!canvas) return;
+            
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Nodes
+            const nodes = [];
+            const nodeCount = 15;
+            
+            for (let i = 0; i < nodeCount; i++) {
+                nodes.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: 2 + Math.random() * 2,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5
+                });
+            }
+            
+            // Connections
+            const connections = [];
+            const connectionCount = 30;
+            
+            for (let i = 0; i < connectionCount; i++) {
+                connections.push({
+                    source: Math.floor(Math.random() * nodeCount),
+                    target: Math.floor(Math.random() * nodeCount),
+                    alpha: 0.1 + Math.random() * 0.1
+                });
+            }
+            
+            // Blocks
+            const blocks = [];
+            const blockCount = 8;
+            
+            for (let i = 0; i < blockCount; i++) {
+                blocks.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: 10 + Math.random() * 20,
+                    vx: (Math.random() - 0.5) * 0.2,
+                    vy: (Math.random() - 0.5) * 0.2,
+                    rotation: Math.random() * Math.PI * 2,
+                    rotationSpeed: (Math.random() - 0.5) * 0.02
+                });
+            }
+            
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                
+                // Draw connections
+                ctx.strokeStyle = 'rgba(0, 168, 255, 0.1)';
+                ctx.lineWidth = 1;
+                
+                connections.forEach(conn => {
+                    const source = nodes[conn.source];
+                    const target = nodes[conn.target];
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(source.x, source.y);
+                    ctx.lineTo(target.x, target.y);
+                    ctx.stroke();
+                });
+                
+                // Update and draw nodes
+                nodes.forEach(node => {
+                    // Update position
+                    node.x += node.vx;
+                    node.y += node.vy;
+                    
+                    // Bounce off walls
+                    if (node.x < 0 || node.x > width) node.vx *= -1;
+                    if (node.y < 0 || node.y > height) node.vy *= -1;
+                    
+                    // Draw node
+                    ctx.fillStyle = 'rgba(0, 245, 255, 0.8)';
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+                
+                // Update and draw blocks
+                blocks.forEach(block => {
+                    // Update position
+                    block.x += block.vx;
+                    block.y += block.vy;
+                    block.rotation += block.rotationSpeed;
+                    
+                    // Bounce off walls
+                    if (block.x < -block.size || block.x > width + block.size) block.vx *= -1;
+                    if (block.y < -block.size || block.y > height + block.size) block.vy *= -1;
+                    
+                    // Draw block
+                    ctx.save();
+                    ctx.translate(block.x, block.y);
+                    ctx.rotate(block.rotation);
+                    
+                    ctx.fillStyle = 'rgba(123, 45, 255, 0.1)';
+                    ctx.fillRect(-block.size/2, -block.size/2, block.size, block.size);
+                    
+                    ctx.strokeStyle = 'rgba(123, 45, 255, 0.3)';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(-block.size/2, -block.size/2, block.size, block.size);
+                    
+                    ctx.restore();
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+        
+        // Initialize animations when page loads
+        window.addEventListener('load', function() {
+            initBlockchainAnimation();
+            
+            // Initialize 3D Minecraft block (placeholder for actual Three.js implementation)
+            const minecraftBlock = document.getElementById('minecraft-block');
+            if (minecraftBlock) {
+                // This would be replaced with actual Three.js code
+                minecraftBlock.innerHTML = `
+                    <div class="text-center">
+                        <div class="minecraft-cube mx-auto relative w-32 h-32 transform-style-preserve-3d transform-rotate-3d">
+                            <div class="absolute w-full h-full bg-[#00a8ff] opacity-70 border border-[#00f5ff] transform-rotate-y-0 translate-z-16px"></div>
+                            <div class="absolute w-full h-full bg-[#0077ff] opacity-70 border border-[#00f5ff] transform-rotate-y-90deg translate-z-16px"></div>
+                            <div class="absolute w-full h-full bg-[#00a8ff] opacity-70 border border-[#00f5ff] transform-rotate-y-180deg translate-z-16px"></div>
+                            <div class="absolute w-full h-full bg-[#0077ff] opacity-70 border border-[#00f5ff] transform-rotate-y-270deg translate-z-16px"></div>
+                            <div class="absolute w-full h-full bg-[#0066cc] opacity-70 border border-[#00f5ff] transform-rotate-x-90deg translate-z-16px"></div>
+                            <div class="absolute w-full h-full bg-[#0055aa] opacity-70 border border-[#00f5ff] transform-rotate-x-270deg translate-z-16px"></div>
+                        </div>
+                        <p class="mt-4 text-[#00f5ff] font-rajdhani">Interactive 3D Minecraft Block</p>
+                    </div>
+                `;
+            }
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+        
+        // Service configurator interaction
+        const serviceCheckboxes = document.querySelectorAll('#services input[type="checkbox"]');
+        const prioritySelect = document.getElementById('priority');
+        const complexitySelect = document.getElementById('complexity');
+        const budgetRange = document.getElementById('budget');
+        const quotePrice = document.querySelector('#services .text-5xl');
+        const quoteTime = document.querySelector('#services .text-xl');
+        
+        function updateQuote() {
+            // Count selected services
+            const selectedServices = Array.from(serviceCheckboxes).filter(cb => cb.checked).length;
+            
+            // Get priority multiplier
+            let priorityMultiplier = 1;
+            if (prioritySelect.value.includes('Express')) priorityMultiplier = 1.5;
+            if (prioritySelect.value.includes('Emergency')) priorityMultiplier = 2;
+            
+            // Get complexity multiplier
+            let complexityMultiplier = 1;
+            if (complexitySelect.value === 'Medium') complexityMultiplier = 1.5;
+            if (complexitySelect.value === 'Complex') complexityMultiplier = 2.5;
+            if (complexitySelect.value === 'Very Complex') complexityMultiplier = 4;
+            
+            // Calculate price
+            const basePrice = selectedServices * 150 * complexityMultiplier * priorityMultiplier;
+            const price = basePrice < 50 ? 50 : basePrice; // Minimum $50
+            
+            // Calculate time
+            const baseTime = selectedServices * 2 * complexityMultiplier / priorityMultiplier;
+            const minTime = Math.max(1, Math.floor(baseTime * 0.8));
+            const maxTime = Math.max(2, Math.ceil(baseTime * 1.2));
+            
+            // Update display
+            quotePrice.textContent = `$${price.toFixed(0)}`;
+            quoteTime.textContent = `${minTime}-${maxTime} days`;
+        }
+        
+        // Add event listeners
+        serviceCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateQuote);
+        });
+        
+        prioritySelect.addEventListener('change', updateQuote);
+        complexitySelect.addEventListener('change', updateQuote);
+        budgetRange.addEventListener('input', updateQuote);
+        
+        // Initialize quote
+        updateQuote();
+    </script>
+</body>
+</html>
